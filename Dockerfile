@@ -13,7 +13,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 # Set user for VNC server (USER is only for build)
 ENV USER root
 # Set default password
-COPY password.txt .
 RUN echo password | vncpasswd
 # Expose VNC port
 EXPOSE 5901
