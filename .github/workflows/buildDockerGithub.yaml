@@ -1,0 +1,22 @@
+name: build and publish to GCR
+
+on:
+  push:
+  schedule:
+  - cron: '35 0 * * *'
+
+jobs:
+  publish-alpine-curl-unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.CR_TOKEN }}
+    - run: docker buildx create --name mybuilder --driver docker-container --bootstrap --use
+    - run: docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/i386,linux/ppc64le,linux/s390x . --tag ghcr.io/rarspace01/vnc-intellij:latest --push
